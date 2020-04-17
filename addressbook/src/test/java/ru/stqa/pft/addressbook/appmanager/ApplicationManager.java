@@ -1,30 +1,19 @@
-package ru.stqa.pft.addressbook;
+package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.testng.Assert.fail;
-
-public class TestBase {
-
-
+public class ApplicationManager {
     private WebDriver wd;
-    //  private String baseUrl;
-//  private boolean acceptNextAlert = true;
-    private StringBuffer verificationErrors = new StringBuffer();
 
-    @BeforeClass(alwaysRun = true)
-    public void setUp() throws Exception {
+    public void init() {
         wd = new FirefoxDriver();
-//    baseUrl = "https://www.google.com/";
         wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         wd.get("http://localhost/addressbook/");
-
         login("admin", "secret");
     }
 
@@ -38,15 +27,15 @@ public class TestBase {
         wd.findElement(By.xpath("//input[@value='Login']")).click();
     }
 
-    protected void returnToGroupPage() {
+    public void returnToGroupPage() {
         wd.findElement(By.linkText("group page")).click();
     }
 
-    protected void submitGroupCreation() {
+    public void submitGroupCreation() {
         wd.findElement(By.name("submit")).click();
     }
 
-    protected void fillGroupForm(GroupData groupData) {
+    public void fillGroupForm(GroupData groupData) {
         wd.findElement(By.name("group_name")).click();
         wd.findElement(By.name("group_name")).clear();
         wd.findElement(By.name("group_name")).sendKeys(groupData.getName());
@@ -58,20 +47,28 @@ public class TestBase {
         wd.findElement(By.name("group_footer")).sendKeys(groupData.getFooter());
     }
 
-    protected void initGroupCreation() {
+    public void initGroupCreation() {
         wd.findElement(By.name("new")).click();
     }
 
-    protected void gotoGroupPage() {
+    public void gotoGroupPage() {
         wd.findElement(By.linkText("groups")).click();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
+    public void stop() {
         wd.quit();
-        String verificationErrorString = verificationErrors.toString();
-        if (!"".equals(verificationErrorString)) {
-            fail(verificationErrorString);
-        }
+//        String verificationErrorString = verificationErrors.toString();
+//        if (!"".equals(verificationErrorString)) {
+//            fail(verificationErrorString);
+//        }
+    }
+
+    public void deleteSelectedGroups() {
+        wd.findElement(By.name("delete")).click();
+        //wd.findElement(By.xpath("(//input[@name='delete'])")).click();
+    }
+
+    public void selectGroup() {
+        wd.findElement(By.name("selected[]")).click();
     }
 }
