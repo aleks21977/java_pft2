@@ -9,9 +9,7 @@ public class TestBase {
     protected final ApplicationManager app = new ApplicationManager(BrowserType.FIREFOX);
 
 
-    //  private String baseUrl;
-//  private boolean acceptNextAlert = true;
-//    private StringBuffer verificationErrors = new StringBuffer();
+    private StringBuffer verificationErrors = new StringBuffer();
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {

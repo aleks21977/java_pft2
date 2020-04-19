@@ -14,6 +14,7 @@ public class HelperBase {
         wd.findElement(locator).click();
     }
 
+    // вводим данные в поле ввода
     protected void type(By locator, String text) {
         click(locator);
         if (text != null) {

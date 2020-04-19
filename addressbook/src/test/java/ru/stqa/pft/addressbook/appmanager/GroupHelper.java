@@ -30,7 +30,6 @@ public class GroupHelper extends HelperBase {
 
     public void deleteSelectedGroups() {
         click(By.name("delete"));
-        //wd.findElement(By.xpath("(//input[@name='delete'])")).click();
     }
 
     public void selectGroup() {
