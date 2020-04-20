@@ -3,6 +3,7 @@ package ru.stqa.pft.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 public class HelperBase {
     protected WebDriver wd;
@@ -35,4 +36,13 @@ public class HelperBase {
             return false;
         }
     }
+
+    public void gotoHomePage() {
+        if (isElementPresent(By.id("maintable"))) {
+            return;
+        }
+        click(By.linkText("home"));
+    }
+
+
 }

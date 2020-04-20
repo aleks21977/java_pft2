@@ -10,12 +10,15 @@ public class ContactDeletionTests extends TestBase {
     if (! app.getContactHelper().isThereAContact()) {
       app.getContactHelper().createContact(new ContactData("FirstName1",
               "LastName1", null, null, null, "Group1"), true);
-      app.getNavigationHelper().gotoHomePage();
+//      app.getNavigationHelper().gotoHomePage();
     }
     app.getContactHelper().selectContact();
     app.getContactHelper().deleteSelectedContact();
     app.getContactHelper().closeAlertMessage();
     try{Thread.sleep(100);}  catch (Exception e){}//пауза
-    app.getNavigationHelper().gotoHomePage();
+//    app.getNavigationHelper().gotoHomePage();
+    app.getHelperBase().gotoHomePage();
+    try{Thread.sleep(1000);}  catch (Exception e){}//пауза
+
   }
 }
