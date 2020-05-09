@@ -6,6 +6,9 @@ import ru.stqa.pft.addressbook.appmanager.HelperBase;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.GroupData;
 
+import java.util.HashSet;
+import java.util.List;
+
 public class ContactModificationTests extends TestBase {
 
   @Test
@@ -16,18 +19,24 @@ public class ContactModificationTests extends TestBase {
 //      app.getNavigationHelper().gotoHomePage();
 
     }
-    int before = app.getContactHelper().getContactCount();
-
-    app.getContactHelper().modificationContact();
-    app.getContactHelper().fillContactForm(new ContactData("FirstName2", "LastName2",
-            "Address2", "Phone2", "Email2", null), false);
+    List<ContactData> before = app.getContactHelper().getContactList();
+    app.getContactHelper().modificationContact(before.size() - 1);
+    ContactData contact = new ContactData("FirstName2", "LastName2",
+            "Address2", "Phone2", "Email2", null);
+    app.getContactHelper().fillContactForm(contact, false);
     app.getContactHelper().submitModificationContact();
     //try{Thread.sleep(100);}  catch (Exception e){}//пауза
 //    app.getNavigationHelper().gotoHomePage();
     app.getHelperBase().gotoHomePage();
     try{Thread.sleep(1000);}  catch (Exception e){}//пауза
-    int after = app.getContactHelper().getContactCount();
-    Assert.assertEquals(after, before);
+    List<ContactData> after = app.getContactHelper().getContactList();
+    Assert.assertEquals(after.size(), before.size());
+
+    before.remove(before.size() - 1);
+    before.add(contact);
+    System.out.println(before);
+    System.out.println(after);
+    Assert.assertEquals(new HashSet<>(before), new HashSet<>(after));
 
   }
 }
