@@ -22,7 +22,7 @@ public class ContactHelper extends HelperBase {
 
     public void fillContactForm(ContactData contactData, boolean creation) {
 //        try{Thread.sleep(1000);}  catch (Exception e){}//пауза
-        type(By.name("firstname"), contactData.getFirtsName());
+        type(By.name("firstname"), contactData.getFirstName());
         type(By.name("lastname"), contactData.getLastName());
         type(By.name("address"), contactData.getAddress());
         type(By.name("home"), contactData.getPhone());
@@ -76,11 +76,17 @@ public class ContactHelper extends HelperBase {
 
     public List<ContactData> getContactList() {
         List<ContactData> contacts = new ArrayList<ContactData>();
-        List<WebElement> elements = wd.findElements(By.cssSelector("tr[name='entry']"));
+        List<WebElement> elements = wd.findElements(By.xpath("//tr[@name='entry']"));
+
         for (WebElement element : elements) {
-            String name = element.getText();
-            ContactData contact = new ContactData(name, null, null, null, null, null);
+//            System.out.println(element);
+//            try{Thread.sleep(3000);}  catch (Exception e){}//пауза
+            String lastName = element.findElement(By.xpath("./td[2]")).getText();
+            String firstName = element.findElement(By.xpath("./td[3]")).getText();
+            int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value"));
+            ContactData contact = new ContactData(id, firstName, lastName, null, null, null, null);
             contacts.add(contact);
+            System.out.println(firstName + " " + lastName + " " + id);
         }
         return  contacts;
     }

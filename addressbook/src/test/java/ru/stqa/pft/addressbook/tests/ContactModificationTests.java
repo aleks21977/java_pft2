@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ContactModificationTests extends TestBase {
 
+  public Object ContactData;
+
   @Test
   public void testContactModification() throws Exception {
     if (! app.getContactHelper().isThereAContact()) {
@@ -20,8 +22,9 @@ public class ContactModificationTests extends TestBase {
 
     }
     List<ContactData> before = app.getContactHelper().getContactList();
+//    System.out.println(before);
     app.getContactHelper().modificationContact(before.size() - 1);
-    ContactData contact = new ContactData("FirstName2", "LastName2",
+    ContactData contact = new ContactData(before.get(before.size() - 1).getId(), "FirstName2", "LastName2",
             "Address2", "Phone2", "Email2", null);
     app.getContactHelper().fillContactForm(contact, false);
     app.getContactHelper().submitModificationContact();
@@ -31,11 +34,8 @@ public class ContactModificationTests extends TestBase {
     try{Thread.sleep(1000);}  catch (Exception e){}//пауза
     List<ContactData> after = app.getContactHelper().getContactList();
     Assert.assertEquals(after.size(), before.size());
-
     before.remove(before.size() - 1);
     before.add(contact);
-    System.out.println(before);
-    System.out.println(after);
     Assert.assertEquals(new HashSet<>(before), new HashSet<>(after));
 
   }
