@@ -6,8 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Contacts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactHelper extends HelperBase {
@@ -25,7 +25,7 @@ public class ContactHelper extends HelperBase {
         type(By.name("firstname"), contactData.getFirstName());
         type(By.name("lastname"), contactData.getLastName());
         type(By.name("address"), contactData.getAddress());
-        type(By.name("home"), contactData.getPhone());
+        type(By.name("home"), contactData.getPhoneHome());
         type(By.name("email"), contactData.getEmail());
 
         if (creation) {
@@ -39,12 +39,12 @@ public class ContactHelper extends HelperBase {
         click(By.name("submit"));
     }
 
-    public void selectContact(int index) {
-        wd.findElements(By.name("selected[]")).get(index).click();
+    public void selectContactById(int id) {
+        wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
     }
 
-    public void modificationContact(int index) {
-        wd.findElements(By.xpath("//img[@alt='Edit']")).get(index).click();
+    public void initContactModificationById(int id) {
+        wd.findElement(By.cssSelector(String.format("a[href='edit.php?id=%s']", id))).click(); //a[href="edit.php?id=93"]
     }
 
     public void deleteSelectedContact() {
@@ -55,6 +55,44 @@ public class ContactHelper extends HelperBase {
         click(By.xpath("(//input[@name='update'])"));
     }
 
+    public ContactData infoFromEditForm(ContactData contact) {
+        initContactModificationById(contact.getId());
+        String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
+        String lastname = wd.findElement(By.name("lastname")).getAttribute("value");
+        String home = wd.findElement(By.name("home")).getAttribute("value");
+        String mobile = wd.findElement(By.name("mobile")).getAttribute("value");
+        String work = wd.findElement(By.name("work")).getAttribute("value");
+        String email = wd.findElement(By.name("email")).getAttribute("value");
+        String email2 = wd.findElement(By.name("email2")).getAttribute("value");
+        String email3 = wd.findElement(By.name("email3")).getAttribute("value");
+        String address = wd.findElement(By.name("address")).getText();
+        wd.navigate().back();
+        return new ContactData().withId(contact.getId()).withFirstName(firstname).withLastName(lastname)
+                .withPhoneHome(home).withPhoneMobile(mobile).withPhoneWork(work)
+                .withEmail(email).withEmail2(email2).withEmail3(email3).withAddress(address);
+    }
+
+    public Contacts all() {
+        if (contactCache != null) {
+            return new Contacts(contactCache);
+        }
+
+        contactCache = new Contacts();
+        List<WebElement> elements = wd.findElements(By.xpath("//tr[@name='entry']"));
+        for (WebElement element : elements) {
+            int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value"));
+            String lastName = element.findElement(By.xpath("./td[2]")).getText();
+            String firstName = element.findElement(By.xpath("./td[3]")).getText();
+            String allPhones = element.findElement(By.xpath("./td[6]")).getText();
+            String allEmails = element.findElement(By.xpath("./td[5]")).getText();
+            String address = element.findElement(By.xpath("./td[4]")).getText();
+            contactCache.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName)
+                    .withAllPhones(allPhones).withAllEmails(allEmails).withAddress(address));
+//            System.out.println(firstName + " " + lastName + " " + id);
+        }
+        return  new Contacts(contactCache);
+    }
+
     public void closeAlertMessage() {
         wd.switchTo().alert().accept();
     }
@@ -63,20 +101,23 @@ public class ContactHelper extends HelperBase {
         initContactCreation();
         fillContactForm(contact, true);
         submitContactCreation();
+        contactCache = null;
         gotoHomePage();
     }
 
-    public void modify(int index, ContactData contact) {
-        modificationContact(index);
+    public void modify(ContactData contact) {
+        initContactModificationById(contact.getId());
         fillContactForm(contact, false);
         submitModificationContact();
+        contactCache = null;
         gotoHomePage();
         try{Thread.sleep(1000);}  catch (Exception e){}//пауза
     }
 
-    public void delete(int index) {
-        selectContact(index);
+    public void delete(ContactData contact) {
+        selectContactById(contact.getId());
         deleteSelectedContact();
+        contactCache = null;
         closeAlertMessage();
     }
 
@@ -84,26 +125,13 @@ public class ContactHelper extends HelperBase {
         return isElementPresent(By.name("selected[]"));
     }
 
-    public int getContactCount() {
+    public int count() {
         return wd.findElements(By.name("selected[]")).size();
     }
 
-    public List<ContactData> list() {
-        List<ContactData> contacts = new ArrayList<ContactData>();
-        List<WebElement> elements = wd.findElements(By.xpath("//tr[@name='entry']"));
-        for (WebElement element : elements) {
-//            System.out.println(element);
-//            try{Thread.sleep(1000);}  catch (Exception e){}//пауза
-            String lastName = element.findElement(By.xpath("./td[2]")).getText();
-            String firstName = element.findElement(By.xpath("./td[3]")).getText();
-            int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value"));
-            contacts.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
-            System.out.println(firstName + " " + lastName + " " + id);
-        }
-        return  contacts;
-    }
+    private Contacts contactCache = null;
 
-//    public void gotoHomePage() {
+    //    public void gotoHomePage() {
 //        if (isElementPresent(By.id("maintable"))) {
 //            return;
 //        }

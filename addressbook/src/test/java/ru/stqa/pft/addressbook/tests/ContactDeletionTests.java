@@ -1,34 +1,34 @@
 package ru.stqa.pft.addressbook.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Contacts;
 
-import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.testng.Assert.assertEquals;
 
 public class ContactDeletionTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions() {
-    if (app.contact().list().size() == 0) {
-      app.contact().create(new ContactData().withFirstName("FirstName1").withLastName("LastName1").withGroup("Group1"), true);
+    if (app.contact().all().size() == 0) {
+      app.contact().create(new ContactData().withFirstName("FirstName1").withLastName("LastName1")
+              .withGroup("Group1"), true);
     }
   }
 
   @Test
   public void testContactDeletion() {
-    List<ContactData> before = app.contact().list();
-    int index = before.size() - 1;
-    app.contact().delete(index);
+    Contacts before = app.contact().all();
+    ContactData deletedContact = before.iterator().next();
+    app.contact().delete(deletedContact);
     try{Thread.sleep(100);}  catch (Exception e){}//пауза
-//    app.getNavigationHelper().gotoHomePage();
     app.getHelperBase().gotoHomePage();
     try{Thread.sleep(1000);}  catch (Exception e){}//пауза
-    List<ContactData> after = app.contact().list();
-    Assert.assertEquals(after.size(), before.size() - 1);//в l5_m3 на 05:35 сказано что не нужно тут менять before.size() - 1
-
-    before.remove(index);
-    Assert.assertEquals(before, after);
+    assertThat(app.contact().count(), equalTo(before.size() - 1));
+    Contacts after = app.contact().all();
+    assertThat(after, equalTo(before.without(deletedContact)));
   }
 }
