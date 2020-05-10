@@ -1,42 +1,41 @@
 package ru.stqa.pft.addressbook.tests;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import ru.stqa.pft.addressbook.appmanager.HelperBase;
 import ru.stqa.pft.addressbook.model.ContactData;
-import ru.stqa.pft.addressbook.model.GroupData;
 
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 
 public class ContactModificationTests extends TestBase {
 
   public Object ContactData;
 
-  @Test
-  public void testContactModification() throws Exception {
-    if (! app.getContactHelper().isThereAContact()) {
-      app.getContactHelper().createContact(new ContactData("FirstName1",
-              "LastName1", null, null, null, "Group1"), true);
-//      app.getNavigationHelper().gotoHomePage();
-
+  @BeforeMethod
+  public void ensurePreconditions() {
+    if (app.contact().list().size() == 0) {
+      app.contact().create(new ContactData().withFirstName("FirstName1").withLastName("LastName1").withGroup("Group1"), true);
     }
-    List<ContactData> before = app.getContactHelper().getContactList();
-//    System.out.println(before);
-    app.getContactHelper().modificationContact(before.size() - 1);
-    ContactData contact = new ContactData(before.get(before.size() - 1).getId(), "FirstName2", "LastName2",
-            "Address2", "Phone2", "Email2", null);
-    app.getContactHelper().fillContactForm(contact, false);
-    app.getContactHelper().submitModificationContact();
-    //try{Thread.sleep(100);}  catch (Exception e){}//пауза
-//    app.getNavigationHelper().gotoHomePage();
-    app.getHelperBase().gotoHomePage();
-    try{Thread.sleep(1000);}  catch (Exception e){}//пауза
-    List<ContactData> after = app.getContactHelper().getContactList();
+  }
+
+  @Test
+  public void testContactModification() {
+    List<ContactData> before = app.contact().list();
+    int index = before.size() - 1;
+    ContactData contact = new ContactData().withId(before.get(index).getId()).withFirstName("FirstName2").
+            withLastName("LastName2").withAddress("Address2").withPhone("Phone2").withEmail("Email2");
+    app.contact().modify(index, contact);
+    List<ContactData> after = app.contact().list();
     Assert.assertEquals(after.size(), before.size());
-    before.remove(before.size() - 1);
+    before.remove(index);
     before.add(contact);
-    Assert.assertEquals(new HashSet<>(before), new HashSet<>(after));
+    Comparator<? super ru.stqa.pft.addressbook.model.ContactData> byId = (c1, c2) -> Integer.compare(c1.getId(), c2.getId());
+    before.sort(byId);
+    after.sort(byId);
+    Assert.assertEquals(before, after);
 
   }
+
+
 }

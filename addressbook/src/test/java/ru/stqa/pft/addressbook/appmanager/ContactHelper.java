@@ -59,11 +59,25 @@ public class ContactHelper extends HelperBase {
         wd.switchTo().alert().accept();
     }
 
-    public void createContact(ContactData contact, boolean b) {
+    public void create(ContactData contact, boolean b) {
         initContactCreation();
         fillContactForm(contact, true);
         submitContactCreation();
         gotoHomePage();
+    }
+
+    public void modify(int index, ContactData contact) {
+        modificationContact(index);
+        fillContactForm(contact, false);
+        submitModificationContact();
+        gotoHomePage();
+        try{Thread.sleep(1000);}  catch (Exception e){}//пауза
+    }
+
+    public void delete(int index) {
+        selectContact(index);
+        deleteSelectedContact();
+        closeAlertMessage();
     }
 
     public boolean isThereAContact() {
@@ -74,18 +88,16 @@ public class ContactHelper extends HelperBase {
         return wd.findElements(By.name("selected[]")).size();
     }
 
-    public List<ContactData> getContactList() {
+    public List<ContactData> list() {
         List<ContactData> contacts = new ArrayList<ContactData>();
         List<WebElement> elements = wd.findElements(By.xpath("//tr[@name='entry']"));
-
         for (WebElement element : elements) {
 //            System.out.println(element);
-//            try{Thread.sleep(3000);}  catch (Exception e){}//пауза
+//            try{Thread.sleep(1000);}  catch (Exception e){}//пауза
             String lastName = element.findElement(By.xpath("./td[2]")).getText();
             String firstName = element.findElement(By.xpath("./td[3]")).getText();
             int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value"));
-            ContactData contact = new ContactData(id, firstName, lastName, null, null, null, null);
-            contacts.add(contact);
+            contacts.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
             System.out.println(firstName + " " + lastName + " " + id);
         }
         return  contacts;
