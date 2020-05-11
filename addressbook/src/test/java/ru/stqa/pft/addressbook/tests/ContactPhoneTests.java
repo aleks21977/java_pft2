@@ -4,6 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -27,8 +28,8 @@ public class ContactPhoneTests extends TestBase {
         ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(contact);
 
         assertThat(contact.getAllPhones(), equalTo(mergePhones(contactInfoFromEditForm)));
-//        System.out.println(contact.getAllEmails() + "\n");
-//        System.out.println(mergeEmails(contactInfoFromEditForm));
+//        System.out.println(contact.getAllPhones() + "\n");
+//        System.out.println(mergePhones(contactInfoFromEditForm));
         assertThat(contact.getAllEmails(), equalTo(mergeEmails(contactInfoFromEditForm)));
 //        System.out.println(contactInfoFromEditForm.getAddress());
         assertThat(contact.getAddress(), equalTo(contactInfoFromEditForm.getAddress()));
@@ -48,7 +49,7 @@ public class ContactPhoneTests extends TestBase {
                 .collect(Collectors.joining("\n"));
     }
 
-    public static String cleaned(String word) {
-        return word.replaceAll("\\s", "").replaceAll("[-()]", "");
+    public static String cleaned(String words) {
+        return words.replaceAll("\\s", "").replaceAll("[-()]", "");
     }
 }

@@ -3,7 +3,8 @@ package ru.stqa.pft.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import ru.stqa.pft.addressbook.model.GroupData;
+
+import java.io.File;
 
 public class HelperBase {
     protected WebDriver wd;
@@ -21,12 +22,19 @@ public class HelperBase {
         click(locator);
         if (text != null) {
             String existingText = wd.findElement(locator).getAttribute("value");
-            if (! text.equals(existingText)) {
+            if (!text.equals(existingText)) {
                 wd.findElement(locator).clear();
                 wd.findElement(locator).sendKeys(text);
             }
         }
     }
+
+    protected void attach(By locator, File file) {
+        if (file != null) {
+            wd.findElement(locator).sendKeys(file.getAbsolutePath());
+        }
+    }
+
 
     protected boolean isElementPresent(By locator) {
         try {
@@ -43,6 +51,4 @@ public class HelperBase {
         }
         click(By.linkText("home"));
     }
-
-
 }

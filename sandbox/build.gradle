@@ -1,7 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+    id 'java'
+}
 
 group 'java_pft2'
+version 'unspecified'
 
 repositories {
     mavenCentral()
