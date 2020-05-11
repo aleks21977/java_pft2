@@ -1,17 +1,12 @@
 <list>
   <group>
-    <name>test 6</name>
-    <header>header 6</header>
-    <footer>footer 6</footer>
+    <name>Group0</name>
+    <header>header 0</header>
+    <footer>footer 0</footer>
   </group>
   <group>
-    <name>test 1</name>
+    <name>Group1</name>
     <header>header 1</header>
     <footer>footer 1</footer>
-  </group>
-  <group>
-    <name>test 2</name>
-    <header>header 2</header>
-    <footer>footer 2</footer>
   </group>
 </list>

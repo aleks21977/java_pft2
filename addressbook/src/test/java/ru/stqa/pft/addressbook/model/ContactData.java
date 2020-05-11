@@ -33,7 +33,7 @@ public class ContactData {
     private String email3;
     @XStreamOmitField
     private String allEmails;
-    @XStreamOmitField
+    @Expose
     private String group;
     @XStreamOmitField
     private File photo;
