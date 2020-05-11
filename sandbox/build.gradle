@@ -1,8 +1,8 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
+apply plugin: 'application'
 
-group 'java_pft2'
+mainClassName = "MyFirstProgram"
+
 version 'unspecified'
 
 repositories {
