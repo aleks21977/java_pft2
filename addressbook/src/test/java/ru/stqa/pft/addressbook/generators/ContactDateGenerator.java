@@ -15,9 +15,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupDateGenerator {
+public class ContactDateGenerator {
 
-    @Parameter(names = "-c", description = "Group count")
+    @Parameter(names = "-c", description = "Contact count")
     public int count;
 
     @Parameter(names = "-f", description = "Target file")
@@ -27,7 +27,7 @@ public class GroupDateGenerator {
     public String format;
 
     public static void main(String[] args) throws IOException {
-        GroupDateGenerator generator = new GroupDateGenerator();
+        ContactDateGenerator generator = new ContactDateGenerator();
         JCommander jCommander = new JCommander(generator);
         try {
             jCommander.parse(args);
@@ -39,13 +39,13 @@ public class GroupDateGenerator {
     }
 
     private void run() throws IOException {
-        List<GroupData> groups = generatorGroup(count);
+        List<GroupData> contacts = generatorGroup(count);
         if (format.equals("csv")) {
-            saveAsCsv(groups, new File(file));
+            saveAsCsv(contacts, new File(file));
         } else if (format.equals("xml")) {
-            saveAsXml(groups, new File(file));
+            saveAsXml(contacts, new File(file));
         } else if (format.equals("json")) {
-            saveAsJson(groups, new File(file));
+            saveAsJson(contacts, new File(file));
         } else {
             System.out.println("Unrecognized format " + format);
         }
