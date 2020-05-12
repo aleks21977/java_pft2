@@ -19,7 +19,7 @@ public class ContactDeletionTests extends TestBase {
   public void ensurePreconditions() {
     if (app.db().contacts().size() == 0) {
       app.contact().create(new ContactData().withFirstName("FirstName1").withLastName("LastName1")
-              .withGroup("Group1").withPhoto(photo), true);
+              .withPhoto(photo), true);
     }
   }
 

@@ -24,20 +24,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactCreationTests  extends TestBase {
 
-  @DataProvider
-  public Iterator<Object[]> validContactsFromCsv() throws IOException {
-    List<Object[]> list = new ArrayList<Object[]>();
-    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.csv")))) {
-      String line = reader.readLine();
-      while (line != null) {
-        String[] split = line.split(";");
-        list.add(new Object[] {new ContactData().withFirstName(split[0]).withLastName(split[1])
-                .withPhoneHome(split[2]).withEmail(split[3]).withAddress(split[4]).withGroup(split[5])});
-        line = reader.readLine();
-      }
-      return list.iterator();
-    }
-  }
+//  @DataProvider
+//  public Iterator<Object[]> validContactsFromCsv() throws IOException {
+//    Groups groups = app.db().groups();
+//    ContactData newContact = new
+//    List<Object[]> list = new ArrayList<Object[]>();
+//    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contacts.csv")))) {
+//      String line = reader.readLine();
+//      while (line != null) {
+//        String[] split = line.split(";");
+//        list.add(new Object[] {new ContactData().withFirstName(split[0]).withLastName(split[1])
+//                .withPhoneHome(split[2]).withEmail(split[3]).withAddress(split[4]).withGroups(split[5])
+//                .inGroup(groups.iterator().next())});
+//        line = reader.readLine();
+//      }
+//      return list.iterator();
+//    }
+//  }
 
   @DataProvider
   public Iterator<Object[]> validContactsFromXml() throws IOException {
@@ -72,9 +75,12 @@ public class ContactCreationTests  extends TestBase {
 
   @Test(dataProvider = "validContactsFromJson")
   public void testContactCreation(ContactData contact) {
-    Contacts before = app.db().contacts();
+    Groups groups = app.db().groups();
     File photo = new File("src/test/resources/stru.png");
+    Contacts before = app.db().contacts();
+
     app.contact().create(contact.withPhoto(photo), true);
+
     assertThat(app.contact().count(), equalTo(before.size() + 1));
     Contacts after = app.db().contacts();
     assertThat(after, equalTo(
@@ -116,13 +122,13 @@ public class ContactCreationTests  extends TestBase {
     System.out.println(photo.exists());
   }
 
-  @Test(enabled = false)//для отключения теста
-  public void testBadContactCreation() {
-    Contacts before = app.contact().all();
-    ContactData contact = new ContactData().withFirstName("FirstName1'").withLastName("LastName1").withGroup("Group1");
-    app.contact().create(contact, true);
-    assertThat(app.contact().count(), equalTo(before.size()));
-    Contacts after = app.contact().all();
-    assertThat(after, equalTo(before));
-  }
+//  @Test(enabled = false)//для отключения теста
+//  public void testBadContactCreation() {
+//    Contacts before = app.contact().all();
+//    ContactData contact = new ContactData().withFirstName("FirstName1'").withLastName("LastName1").withGroup("Group1");
+//    app.contact().create(contact, true);
+//    assertThat(app.contact().count(), equalTo(before.size()));
+//    Contacts after = app.contact().all();
+//    assertThat(after, equalTo(before));
+//  }
 }
