@@ -13,11 +13,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactPhoneTests extends TestBase {
 
+    File photo = new File("src/test/resources/stru.png");
+
     @BeforeMethod
     public void ensurePreconditions() {
+        app.goTo().groupPage();
         if (app.contact().all().size() == 0) {
             app.contact().create(new ContactData().withFirstName("FirstName1").withLastName("LastName1")
-                    .withPhoneHome("111"), true);
+                    .withPhoto(photo), true);
         }
     }
 

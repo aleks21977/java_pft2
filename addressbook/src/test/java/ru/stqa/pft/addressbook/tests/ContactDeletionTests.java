@@ -25,6 +25,8 @@ public class ContactDeletionTests extends TestBase {
 
   @Test
   public void testContactDeletion() {
+//    try{Thread.sleep(1000);}  catch (Exception e){}//пауза
+    app.goTo().gotoHomePage();
     Contacts before = app.db().contacts();
     ContactData deletedContact = before.iterator().next();
     app.contact().delete(deletedContact);

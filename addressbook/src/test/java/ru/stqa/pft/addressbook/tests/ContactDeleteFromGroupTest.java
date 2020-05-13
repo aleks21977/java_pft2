@@ -26,7 +26,7 @@ public class ContactDeleteFromGroupTest extends TestBase{
         }
         if (app.db().groups().size() == 0) {
             app.goTo().groupPage();
-            app.group().create(new GroupData().withName("test1"));
+            app.group().create(new GroupData().withName("Group0"));
         }
     }
 
@@ -45,6 +45,8 @@ public class ContactDeleteFromGroupTest extends TestBase{
             app.goTo().gotoHomePage();
         }
         app.contact().removeContactFromGroup(selectedContact, selectedGroup);
+        app.goTo().gotoHomePage();
+        app.contact().selectDisplayGroup("[all]");
         assertThat(selectedContact.getGroups().without(selectedGroup), CoreMatchers.equalTo(app.db().contacts().stream().
                 filter((a)->a.getId() == selectedContact.getId()).collect(Collectors.toList()).get(0).getGroups()));
     }
