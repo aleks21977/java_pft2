@@ -21,8 +21,8 @@ public class ResetPasswordTests extends TestBase{
 
     @Test
     public void testsResetPassword() throws IOException, MessagingException {
+        long now = System.currentTimeMillis();
         String user = "234";
-        String password = "123";
         String passwordJames = "123";
         //String user = String.format("user%s", now);
         String password = String.format("%s", now);
