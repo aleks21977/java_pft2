@@ -19,3 +19,5 @@ gradle-app.setting
 *.log
 gradlew.bat
 gradlew
+addressbook/out/
+mantis-tests/out/
