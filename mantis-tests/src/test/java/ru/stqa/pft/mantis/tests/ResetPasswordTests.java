@@ -14,7 +14,7 @@ import static org.testng.Assert.assertTrue;
 
 public class ResetPasswordTests extends TestBase{
 
-    @BeforeMethod //переделка согласно l8_m7 05:00
+    //@BeforeMethod //переделка согласно l8_m7 05:00
     public void startMailServer() {
         app.mail().start();
     }
@@ -23,9 +23,20 @@ public class ResetPasswordTests extends TestBase{
     public void testsResetPassword() throws IOException, MessagingException {
         String user = "234";
         String password = "123";
+        String passwordJames = "123";
+        //String user = String.format("user%s", now);
+        String password = String.format("%s", now);
         String email = String.format("%s@localhost", user);
+//        if (app.james().doesUserExist(user)) {
+//            app.james().deleteUser(user);//удаление существующего пользователя на внешнем почтовом сервере james для очистки его почты
+//        }
+        //String email = String.format("user%s@localhost", now);
+        //app.james().createUser(user, password);//создание пользователя на внешнем почтовом сервере james
+        app.james().drainEmail(user, passwordJames);//очитска почты пользователя на внешнем почтовом сервере james
+        //app.registration().start(user, email);
         app.resetpassword().start(user);
-        List<MailMessage> mailMessages = app.mail().waitForMail(1, 10000);
+        //List<MailMessage> mailMessages = app.mail().waitForMail(1, 10000);
+        List<MailMessage> mailMessages = app.james().waitForMail(user, passwordJames, 30000);
         String confirmationLink = findConfirmationLink(mailMessages, email);
         app.resetpassword().resetPasswordFinish(confirmationLink, password);
         assertTrue(app.newSession().login(user, password));
@@ -38,7 +49,7 @@ public class ResetPasswordTests extends TestBase{
     }
 
 
-    @AfterMethod(alwaysRun = true) //переделка согласно l8_m7 05:00
+    //@AfterMethod(alwaysRun = true) //переделка согласно l8_m7 05:00
     public void stopMailServer() {
         app.mail().stop();
     }

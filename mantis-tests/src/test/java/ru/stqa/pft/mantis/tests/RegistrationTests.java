@@ -20,13 +20,19 @@ public class RegistrationTests extends TestBase{
     @Test
     public void testsRegistration() throws IOException, MessagingException {
         long now = System.currentTimeMillis();
-        String user = String.format("user%s", now);
-        String password = "password";
-        String email = String.format("user%s@localhost", now);
+        String user = "234";
+        //String user = String.format("user%s", now);
+        String password = "123";
+        String email = String.format("%s@localhost", user);
+        if (app.james().doesUserExist(user)) {
+            app.james().deleteUser(user);//удаление существующего пользователя на внешнем почтовом сервере james для очистки его почты
+        }
+        //String email = String.format("user%s@localhost", now);
         app.james().createUser(user, password);
+        app.james().drainEmail(user, password);//очитска почты пользователя на внешнем почтовом сервере james
         app.registration().start(user, email);
         //List<MailMessage> mailMessages = app.mail().waitForMail(2, 10000); //переделка согласно l8_m7 05:00
-        List<MailMessage> mailMessages = app.james().waitForMail(user, password, 60000);
+        List<MailMessage> mailMessages = app.james().waitForMail(user, password, 30000);
         String cofirmationLink = findCofirmationLink(mailMessages, email);
         app.registration().finis(cofirmationLink, password);
         assertTrue(app.newSession().login(user, password));

@@ -79,6 +79,12 @@ public class JamesHelper {
     readUntil("Welcome "+login+". HELP for a list of commands");
   }
 
+  private void closeTelnetSession() {
+    write("quit");
+  }
+
+
+
   private String readUntil(String pattern) {
     try {
       char lastChar = pattern.charAt(pattern.length() - 1);
@@ -110,16 +116,14 @@ public class JamesHelper {
     }
   }
 
-  private void closeTelnetSession() {
-    write("quit");
-  }
-
   public void drainEmail(String username, String password) throws MessagingException {
+    initTelnetSession();
     Folder inbox = openInbox(username, password);
     for (Message message : inbox.getMessages()) {
       message.setFlag(Flags.Flag.DELETED, true);
     }
     closeFolder(inbox);
+    closeTelnetSession();
   }
 
   private void closeFolder(Folder folder) throws MessagingException {
@@ -136,6 +140,7 @@ public class JamesHelper {
   }
 
   public List<MailMessage> waitForMail(String username, String password, long timeout) throws MessagingException {
+    initTelnetSession();
     long now = System.currentTimeMillis();
     while (System.currentTimeMillis() < now + timeout) {
       List<MailMessage> allMail = getAllMail(username, password);
