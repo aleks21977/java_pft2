@@ -21,3 +21,6 @@ gradlew.bat
 gradlew
 addressbook/out/
 mantis-tests/out/
+github-sample/out/
+rest-sample/out/
+
