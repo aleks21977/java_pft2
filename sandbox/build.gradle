@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = "MyFirstProgram"
+mainClassName = "MyFirstProgram1"
 
 version 'unspecified'
 

@@ -1,5 +1,9 @@
 .gradle
 gradle/
+wrapper/
+caches/
+native/
+daemon/
 build/
 .idea/
 # /Test/
@@ -23,4 +27,5 @@ addressbook/out/
 mantis-tests/out/
 github-sample/out/
 rest-sample/out/
-
+sandbox/out/
+sandbox/build/
