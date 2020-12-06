@@ -30,3 +30,4 @@ github-sample/out/
 rest-sample/out/
 sandbox/out/
 sandbox/build/
+.DS_Store
